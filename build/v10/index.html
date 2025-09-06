@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Theme colors -->
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="msapplication-TileColor" content="#3b82f6" />
+  
+  <!-- Apple PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Skill Swap" />
+  <link rel="apple-touch-icon" href="/images/icon.jpg" />
+  
+  <!-- Windows PWA -->
+  <meta name="msapplication-starturl" content="/" />
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  
+  <title>Skill Swap Mini-Market</title>
+  <meta name="description" content="Connect, Learn, Teach, and Grow with peer-to-peer skill exchange" />
+  <meta name="author" content="Skill Swap Team" />
+  <meta name="keywords" content="skills, learning, teaching, exchange, education, peer-to-peer" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Skill Swap Mini-Market" />
+  <meta property="og:description" content="Connect, Learn, Teach, and Grow with peer-to-peer skill exchange" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://skillswap.app" />
+  <meta property="og:image" content="/icons/icon-512x512.png" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Skill Swap Mini-Market" />
+  <meta name="twitter:description" content="Connect, Learn, Teach, and Grow with peer-to-peer skill exchange" />
+  <meta name="twitter:image" content="/icons/icon-512x512.png" />
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="data:application/octet-stream;base64,aW1wb3J0IHsgY3JlYXRlUm9vdCB9IGZyb20gJ3JlYWN0LWRvbS9jbGllbnQnOwppbXBvcnQgQXBwIGZyb20gJy4vQXBwLnRzeCc7CmltcG9ydCAnLi9pbmRleC5jc3MnOwoKY3JlYXRlUm9vdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncm9vdCcpISkucmVuZGVyKDxBcHAgLz4pOwo=" as="script" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Security headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:; font-src 'self' https:;" />
+  
+  <!-- Performance hints -->
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  
+  <style>
+    /* Critical CSS for initial load */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #faf5ff 100%);
+    }
+    
+    /* Loading spinner */
+    .loading-spinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    /* Hide loading spinner when app loads */
+    #root:not(:empty) + .loading-spinner {
+      display: none;
+    }
+    
+    /* PWA safe areas */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-YQrpWgBo.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BlgakEwY.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <div class="loading-spinner"></div>
+  
+  
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+    
+    // PWA install prompt handling
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      window.deferredPrompt = e;
+    });
+    
+    // Handle app installed
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA was installed');
+      deferredPrompt = null;
+    });
+    
+    // Performance monitoring
+    window.addEventListener('load', () => {
+      if ('performance' in window) {
+        const perfData = performance.getEntriesByType('navigation')[0];
+        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart);
+      }
+    });
+  </script>
+</body>
+
+</html>
